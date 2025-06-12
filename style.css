@@ -75,7 +75,7 @@ body {
 .studio-interface {
     display: grid;
     gap: 2rem;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr auto auto;
 }
 
 .control-section {
@@ -266,6 +266,27 @@ input[type="range"]::-webkit-slider-thumb {
     --secondary-bg: #1a1a1a;
     --accent-color: #bb86fc;
     --key-active: #03dac6;
+}
+
+.lesson-section {
+    background: var(--secondary-bg);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.lesson-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.lesson-content {
+    padding: 1.5rem;
+    background: var(--primary-bg);
+    border-radius: 0.5rem;
 }
 
 @media (max-width: 1200px) {
