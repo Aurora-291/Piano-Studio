@@ -15,6 +15,12 @@ const themeSelect = document.getElementById('themeSelect');
 const canvas = document.getElementById('visualizer');
 const canvasCtx = canvas.getContext('2d');
 
+const bpmControl = document.getElementById('bpmControl');
+const bpmValue = document.getElementById('bpmValue');
+const metronome = document.getElementById('metronome');
+let metronomeInterval;
+let isMetronomeOn = false;
+
 let isRecording = false;
 let recording = [];
 let startTime;
@@ -136,6 +142,24 @@ function drawVisualizer() {
     canvasCtx.lineTo(canvas.width, canvas.height / 2);
     canvasCtx.stroke();
 }
+function startMetronome() {
+    const interval = (60 / parseInt(bpmControl.value)) * 1000;
+    
+    metronomeInterval = setInterval(() => {
+        const clickOsc = audioContext.createOscillator();
+        const clickGain = audioContext.createGain();
+        
+        clickOsc.connect(clickGain);
+        clickGain.connect(audioContext.destination);
+        
+        clickGain.gain.setValueAtTime(0.2, audioContext.currentTime);
+        clickGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+        
+        clickOsc.frequency.setValueAtTime(800, audioContext.currentTime);
+        clickOsc.start();
+        clickOsc.stop(audioContext.currentTime + 0.05);
+    }, interval);
+}
 
 function initializeEventListeners() {
     keys.forEach(key => {
@@ -219,7 +243,27 @@ function initializeEventListeners() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
     });
+
+    metronome.addEventListener('click', () => {
+        isMetronomeOn = !isMetronomeOn;
+        if (isMetronomeOn) {
+            startMetronome();
+            metronome.classList.add('active');
+        } else {
+            clearInterval(metronomeInterval);
+            metronome.classList.remove('active');
+        }
+    });
+
+    bpmControl.addEventListener('input', (e) => {
+        bpmValue.textContent = e.target.value;
+        if (isMetronomeOn) {
+            clearInterval(metronomeInterval);
+            startMetronome();
+        }
+    });
 }
+
 
 function initializeApp() {
     createReverbImpulse();

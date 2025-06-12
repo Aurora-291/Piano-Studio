@@ -130,11 +130,23 @@ input[type="range"]::-webkit-slider-thumb {
     color: var(--text-secondary);
 }
 
-.recording-panel {
+.recording-panel, .tempo-panel {
     display: flex;
     gap: 1.5rem;
     align-items: center;
 }
+
+.tempo-panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.tempo-slider {
+    width: 100%;
+}
+
+.studio-btn.metronome { background: #9b59b6; }
 
 .studio-btn {
     padding: 1rem 2rem;
