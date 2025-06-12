@@ -1,10 +1,25 @@
+:root {
+    --primary-bg: #1a1a2e;
+    --secondary-bg: #16213e;
+    --accent-color: #4a90e2;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --key-white: #ffffff;
+    --key-black: #1a1a1a;
+    --key-active: #4a90e2;
+    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-strong: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --transition-smooth: all 0.3s ease;
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: #1a1a2e;
-    color: #ffffff;
+    background: var(--primary-bg);
+    color: var(--text-primary);
     min-height: 100vh;
+    line-height: 1.6;
 }
 
 .studio-container {
@@ -18,9 +33,10 @@ body {
     justify-content: center;
     align-items: center;
     padding: 1.5rem 2rem;
-    background: #16213e;
+    background: var(--secondary-bg);
     border-radius: 1rem;
     margin-bottom: 2rem;
+    box-shadow: var(--shadow-soft);
 }
 
 .brand {
@@ -31,23 +47,29 @@ body {
 
 .brand i {
     font-size: 2.5rem;
-    color: #4a90e2;
+    color: var(--accent-color);
 }
 
 .brand h1 {
     font-size: 2rem;
     margin: 0;
+    font-weight: 300;
+    letter-spacing: 0.05em;
 }
 
 .piano-section {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 2rem;
     margin: 3rem 0;
+    perspective: 1000px;
 }
 
 .piano-keyboard {
     display: flex;
     position: relative;
+    transform: rotateX(5deg);
 }
 
 .piano-key {
@@ -58,10 +80,12 @@ body {
     padding-bottom: 1.5rem;
     border-radius: 0 0 6px 6px;
     cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
 }
 
 .piano-key.white {
-    background: #ffffff;
+    background: var(--key-white);
     height: 300px;
     width: 80px;
     border: 1px solid #ddd;
@@ -69,10 +93,15 @@ body {
 }
 
 .piano-key.black {
-    background: #1a1a1a;
+    background: var(--key-black);
     height: 180px;
     width: 50px;
     margin: 0 -25px;
     z-index: 1;
     color: #fff;
+}
+
+.piano-key.active {
+    transform: translateY(5px);
+    background: var(--key-active);
 }
