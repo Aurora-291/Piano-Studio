@@ -7,30 +7,73 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="theme-classic">
     <div class="studio-container">
         <nav class="top-bar">
             <div class="brand">
                 <i class="fas fa-piano"></i>
                 <h1>Piano Studio</h1>
             </div>
+            
+            <div class="theme-controls">
+                <select id="themeSelect" class="elegant-select">
+                    <option value="classic">Timeless Classic</option>
+                    <option value="neon">Electric Dreams</option>
+                    <option value="vintage">Vintage Soul</option>
+                    <option value="midnight">Midnight Blues</option>
+                </select>
+            </div>
         </nav>
-        
-        <div class="piano-section">
-            <div id="piano" class="piano-keyboard">
-                <div data-note="C4" class="piano-key white">A</div>
-                <div data-note="Db4" class="piano-key black">W</div>
-                <div data-note="D4" class="piano-key white">S</div>
-                <div data-note="Eb4" class="piano-key black">E</div>
-                <div data-note="E4" class="piano-key white">D</div>
-                <div data-note="F4" class="piano-key white">F</div>
-                <div data-note="Gb4" class="piano-key black">T</div>
-                <div data-note="G4" class="piano-key white">G</div>
-                <div data-note="Ab4" class="piano-key black">Y</div>
-                <div data-note="A4" class="piano-key white">H</div>
-                <div data-note="Bb4" class="piano-key black">U</div>
-                <div data-note="B4" class="piano-key white">J</div>
-                <div data-note="C5" class="piano-key white">K</div>
+
+        <div class="studio-interface">
+            <div class="control-section">
+                <div class="sound-panel">
+                    <div class="control-module">
+                        <label class="slider-label">Volume</label>
+                        <div class="slider-group">
+                            <input type="range" id="volumeControl" min="0" max="100" value="50">
+                            <span id="volumeValue" class="slider-value">50%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-module">
+                        <label class="slider-label">Reverb</label>
+                        <div class="slider-group">
+                            <input type="range" id="reverbControl" min="0" max="100" value="30">
+                            <span id="reverbValue" class="slider-value">30%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-module">
+                        <label class="select-label">Instrument</label>
+                        <select id="instrumentSelect" class="elegant-select">
+                            <option value="sine">Grand Piano</option>
+                            <option value="square">Classic Organ</option>
+                            <option value="sawtooth">Synthesizer</option>
+                            <option value="triangle">Crystal Box</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="piano-section">
+                <div class="octave-label">C4</div>
+                <div id="piano" class="piano-keyboard">
+                    <div data-note="C4" class="piano-key white" data-key="a">A</div>
+                    <div data-note="Db4" class="piano-key black" data-key="w">W</div>
+                    <div data-note="D4" class="piano-key white" data-key="s">S</div>
+                    <div data-note="Eb4" class="piano-key black" data-key="e">E</div>
+                    <div data-note="E4" class="piano-key white" data-key="d">D</div>
+                    <div data-note="F4" class="piano-key white" data-key="f">F</div>
+                    <div data-note="Gb4" class="piano-key black" data-key="t">T</div>
+                    <div data-note="G4" class="piano-key white" data-key="g">G</div>
+                    <div data-note="Ab4" class="piano-key black" data-key="y">Y</div>
+                    <div data-note="A4" class="piano-key white" data-key="h">H</div>
+                    <div data-note="Bb4" class="piano-key black" data-key="u">U</div>
+                    <div data-note="B4" class="piano-key white" data-key="j">J</div>
+                    <div data-note="C5" class="piano-key white" data-key="k">K</div>
+                </div>
+                <div class="octave-label">C5</div>
             </div>
         </div>
     </div>

@@ -30,7 +30,7 @@ body {
 
 .top-bar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
     background: var(--secondary-bg);
@@ -104,4 +104,104 @@ body {
 .piano-key.active {
     transform: translateY(5px);
     background: var(--key-active);
+}
+
+.elegant-select {
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    border: 2px solid var(--accent-color);
+    background: var(--secondary-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.elegant-select:hover {
+    background: var(--accent-color);
+}
+
+.studio-interface {
+    display: grid;
+    gap: 2rem;
+    grid-template-rows: auto 1fr;
+}
+
+.control-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background: var(--secondary-bg);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.control-module {
+    margin-bottom: 2rem;
+}
+
+.slider-label, .select-label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+input[type="range"] {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--primary-bg);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.slider-value {
+    min-width: 4rem;
+    text-align: right;
+    color: var(--text-secondary);
+}
+
+.theme-classic {
+    --primary-bg: #1a1a2e;
+    --secondary-bg: #16213e;
+    --accent-color: #4a90e2;
+}
+
+.theme-neon {
+    --primary-bg: #0a0a1f;
+    --secondary-bg: #1a1a3e;
+    --accent-color: #ff2e63;
+    --key-active: #00ff9f;
+}
+
+.theme-vintage {
+    --primary-bg: #2c1810;
+    --secondary-bg: #482c1d;
+    --accent-color: #c17817;
+    --key-active: #e6b17e;
+}
+
+.theme-midnight {
+    --primary-bg: #0a0a0a;
+    --secondary-bg: #1a1a1a;
+    --accent-color: #bb86fc;
+    --key-active: #03dac6;
 }
