@@ -6,6 +6,15 @@ const volumeValue = document.getElementById('volumeValue');
 const instrumentSelect = document.getElementById('instrumentSelect');
 const themeSelect = document.getElementById('themeSelect');
 
+const reverbControl = document.getElementById('reverbControl');
+const reverbValue = document.getElementById('reverbValue');
+const bpmControl = document.getElementById('bpmControl');
+const bpmValue = document.getElementById('bpmValue');
+const metronome = document.getElementById('metronome');
+
+const convolver = audioContext.createConvolver();
+let metronomeInterval;
+let isMetronomeOn = false;
 
 const recordToggle = document.getElementById('recordToggle');
 const playRecording = document.getElementById('playRecording');
@@ -18,6 +27,9 @@ let startTime;
 let isPlaying = {};
 
 masterGainNode.connect(audioContext.destination);
+const analyser = audioContext.createAnalyser();
+masterGainNode.connect(analyser);
+analyser.connect(audioContext.destination);
 
 const keyMap = {
     'a': 'C4', 'w': 'Db4', 's': 'D4', 'e': 'Eb4', 'd': 'E4',
@@ -32,9 +44,24 @@ const noteFrequencies = {
     'C5': 523.25
 };
 
+function createReverbImpulse() {
+    const length = audioContext.sampleRate * 2;
+    const impulse = audioContext.createBuffer(2, length, audioContext.sampleRate);
+    
+    for (let channel = 0; channel < 2; channel++) {
+        const channelData = impulse.getChannelData(channel);
+        for (let i = 0; i < length; i++) {
+            channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 10);
+        }
+    }
+    
+    convolver.buffer = impulse;
+}
+
 function createOscillator(freq) {
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
+    const reverbGain = audioContext.createGain();
     
     oscillator.type = instrumentSelect.value;
     oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
@@ -42,14 +69,40 @@ function createOscillator(freq) {
     oscillator.connect(gainNode);
     gainNode.connect(masterGainNode);
     
+    oscillator.connect(reverbGain);
+    reverbGain.connect(convolver);
+    convolver.connect(masterGainNode);
+    
     const volume = volumeControl.value / 100;
-    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+    const reverbLevel = reverbControl.value / 100;
+    
+    gainNode.gain.setValueAtTime(volume * 0.7, audioContext.currentTime);
+    reverbGain.gain.setValueAtTime(reverbLevel * 0.3, audioContext.currentTime);
     
     oscillator.start();
     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1);
     oscillator.stop(audioContext.currentTime + 1);
     
     return oscillator;
+}
+
+function startMetronome() {
+    const interval = (60 / parseInt(bpmControl.value)) * 1000;
+    
+    metronomeInterval = setInterval(() => {
+        const clickOsc = audioContext.createOscillator();
+        const clickGain = audioContext.createGain();
+        
+        clickOsc.connect(clickGain);
+        clickGain.connect(audioContext.destination);
+        
+        clickGain.gain.setValueAtTime(0.2, audioContext.currentTime);
+        clickGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+        
+        clickOsc.frequency.setValueAtTime(800, audioContext.currentTime);
+        clickOsc.start();
+        clickOsc.stop(audioContext.currentTime + 0.05);
+    }, interval);
 }
 
 function playNote(note) {
