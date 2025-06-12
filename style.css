@@ -205,3 +205,39 @@ input[type="range"]::-webkit-slider-thumb {
     --accent-color: #bb86fc;
     --key-active: #03dac6;
 }
+
+.recording-panel {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.studio-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    background: var(--accent-color);
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+}
+
+.studio-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+.studio-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.studio-btn.record { background: #e74c3c; }
+.studio-btn.play { background: #2ecc71; }
+.studio-btn.save { background: #f1c40f; }

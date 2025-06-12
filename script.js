@@ -6,6 +6,15 @@ const volumeValue = document.getElementById('volumeValue');
 const instrumentSelect = document.getElementById('instrumentSelect');
 const themeSelect = document.getElementById('themeSelect');
 
+
+const recordToggle = document.getElementById('recordToggle');
+const playRecording = document.getElementById('playRecording');
+const saveRecording = document.getElementById('saveRecording');
+
+let isRecording = false;
+let recording = [];
+let startTime;
+
 let isPlaying = {};
 
 masterGainNode.connect(audioContext.destination);
@@ -52,6 +61,15 @@ function playNote(note) {
         const oscillator = createOscillator(noteFrequencies[note]);
         isPlaying[note] = oscillator;
         
+        if (isRecording) {
+            recording.push({
+                note,
+                time: Date.now() - startTime,
+                instrument: instrumentSelect.value,
+                volume: volumeControl.value
+            });
+        }
+        
         setTimeout(() => {
             key.classList.remove('active');
             delete isPlaying[note];
@@ -81,6 +99,55 @@ function initializeEventListeners() {
 
     themeSelect.addEventListener('change', (e) => {
         document.body.className = `theme-${e.target.value}`;
+    });
+
+    recordToggle.addEventListener('click', () => {
+        isRecording = !isRecording;
+        if (isRecording) {
+            recording = [];
+            startTime = Date.now();
+            recordToggle.innerHTML = '<i class="fas fa-stop"></i><span>Stop</span>';
+            recordToggle.classList.add('recording');
+            playRecording.disabled = true;
+            saveRecording.disabled = true;
+        } else {
+            recordToggle.innerHTML = '<i class="fas fa-circle"></i><span>Record</span>';
+            recordToggle.classList.remove('recording');
+            playRecording.disabled = false;
+            saveRecording.disabled = false;
+        }
+    });
+
+    playRecording.addEventListener('click', () => {
+        if (recording.length === 0) return;
+        
+        playRecording.disabled = true;
+        recordToggle.disabled = true;
+        
+        recording.forEach(note => {
+            setTimeout(() => {
+                instrumentSelect.value = note.instrument;
+                volumeControl.value = note.volume;
+                playNote(note.note);
+            }, note.time);
+        });
+        
+        setTimeout(() => {
+            playRecording.disabled = false;
+            recordToggle.disabled = false;
+        }, recording[recording.length - 1].time + 1000);
+    });
+
+    saveRecording.addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(recording)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'piano-recording.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
 }
 
