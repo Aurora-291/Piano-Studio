@@ -11,19 +11,18 @@ const instrumentSelect = document.getElementById('instrumentSelect');
 const recordToggle = document.getElementById('recordToggle');
 const playRecording = document.getElementById('playRecording');
 const saveRecording = document.getElementById('saveRecording');
+const bpmControl = document.getElementById('bpmControl');
+const bpmValue = document.getElementById('bpmValue');
+const metronome = document.getElementById('metronome');
 const themeSelect = document.getElementById('themeSelect');
 const canvas = document.getElementById('visualizer');
 const canvasCtx = canvas.getContext('2d');
 
-const bpmControl = document.getElementById('bpmControl');
-const bpmValue = document.getElementById('bpmValue');
-const metronome = document.getElementById('metronome');
-let metronomeInterval;
-let isMetronomeOn = false;
-
 let isRecording = false;
 let recording = [];
 let startTime;
+let metronomeInterval;
+let isMetronomeOn = false;
 let isPlaying = {};
 
 masterGainNode.connect(analyser);
@@ -142,6 +141,7 @@ function drawVisualizer() {
     canvasCtx.lineTo(canvas.width, canvas.height / 2);
     canvasCtx.stroke();
 }
+
 function startMetronome() {
     const interval = (60 / parseInt(bpmControl.value)) * 1000;
     
@@ -235,15 +235,6 @@ function initializeEventListeners() {
         URL.revokeObjectURL(url);
     });
 
-    themeSelect.addEventListener('change', (e) => {
-        document.body.className = `theme-${e.target.value}`;
-    });
-
-    window.addEventListener('resize', () => {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    });
-
     metronome.addEventListener('click', () => {
         isMetronomeOn = !isMetronomeOn;
         if (isMetronomeOn) {
@@ -262,8 +253,16 @@ function initializeEventListeners() {
             startMetronome();
         }
     });
-}
 
+    themeSelect.addEventListener('change', (e) => {
+        document.body.className = `theme-${e.target.value}`;
+    });
+
+    window.addEventListener('resize', () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    });
+}
 
 function initializeApp() {
     createReverbImpulse();

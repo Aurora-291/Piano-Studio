@@ -8,6 +8,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="theme-classic">
+    <div class="orientation-message">
+        <i class="fas fa-mobile-alt"></i>
+        <p>Please rotate to landscape mode</p>
+    </div>
+
     <div class="studio-container">
         <nav class="top-bar">
             <div class="brand">
@@ -69,6 +74,7 @@
                         <span>Save</span>
                     </button>
                 </div>
+
                 <div class="tempo-panel">
                     <button id="metronome" class="studio-btn metronome">
                         <i class="fas fa-drum"></i>
@@ -104,6 +110,7 @@
             <div class="visualizer-container">
                 <canvas id="visualizer"></canvas>
             </div>
+
             <div class="lesson-section">
                 <div class="lesson-header">
                     <button id="prevLesson" class="studio-btn"><i class="fas fa-chevron-left"></i></button>
@@ -118,10 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="orientation-message">
-        <i class="fas fa-mobile-alt"></i>
-        <p>Please rotate to landscape mode</p>
-    </div>
+
     <div class="modal-overlay" id="helpModal">
         <div class="modal-window">
             <h2>Piano Studio Guide</h2>
@@ -136,7 +140,6 @@
             <button id="closeHelp" class="studio-btn close">Close Guide</button>
         </div>
     </div>
-
 
     <script src="script.js"></script>
 </body>
