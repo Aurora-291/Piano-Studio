@@ -1,35 +1,31 @@
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioContext.createAnalyser();
 const masterGainNode = audioContext.createGain();
+const convolver = audioContext.createConvolver();
 const keys = document.querySelectorAll('.piano-key');
 const volumeControl = document.getElementById('volumeControl');
 const volumeValue = document.getElementById('volumeValue');
-const instrumentSelect = document.getElementById('instrumentSelect');
-const themeSelect = document.getElementById('themeSelect');
-
 const reverbControl = document.getElementById('reverbControl');
 const reverbValue = document.getElementById('reverbValue');
-const bpmControl = document.getElementById('bpmControl');
-const bpmValue = document.getElementById('bpmValue');
-const metronome = document.getElementById('metronome');
-
-const convolver = audioContext.createConvolver();
-let metronomeInterval;
-let isMetronomeOn = false;
-
+const instrumentSelect = document.getElementById('instrumentSelect');
 const recordToggle = document.getElementById('recordToggle');
 const playRecording = document.getElementById('playRecording');
 const saveRecording = document.getElementById('saveRecording');
+const themeSelect = document.getElementById('themeSelect');
+const canvas = document.getElementById('visualizer');
+const canvasCtx = canvas.getContext('2d');
 
 let isRecording = false;
 let recording = [];
 let startTime;
-
 let isPlaying = {};
 
-masterGainNode.connect(audioContext.destination);
-const analyser = audioContext.createAnalyser();
 masterGainNode.connect(analyser);
 analyser.connect(audioContext.destination);
+
+analyser.fftSize = 2048;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Float32Array(bufferLength);
 
 const keyMap = {
     'a': 'C4', 'w': 'Db4', 's': 'D4', 'e': 'Eb4', 'd': 'E4',
@@ -86,25 +82,6 @@ function createOscillator(freq) {
     return oscillator;
 }
 
-function startMetronome() {
-    const interval = (60 / parseInt(bpmControl.value)) * 1000;
-    
-    metronomeInterval = setInterval(() => {
-        const clickOsc = audioContext.createOscillator();
-        const clickGain = audioContext.createGain();
-        
-        clickOsc.connect(clickGain);
-        clickGain.connect(audioContext.destination);
-        
-        clickGain.gain.setValueAtTime(0.2, audioContext.currentTime);
-        clickGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
-        
-        clickOsc.frequency.setValueAtTime(800, audioContext.currentTime);
-        clickOsc.start();
-        clickOsc.stop(audioContext.currentTime + 0.05);
-    }, interval);
-}
-
 function playNote(note) {
     if (isPlaying[note]) return;
     
@@ -119,7 +96,8 @@ function playNote(note) {
                 note,
                 time: Date.now() - startTime,
                 instrument: instrumentSelect.value,
-                volume: volumeControl.value
+                volume: volumeControl.value,
+                reverb: reverbControl.value
             });
         }
         
@@ -128,6 +106,35 @@ function playNote(note) {
             delete isPlaying[note];
         }, 150);
     }
+}
+
+function drawVisualizer() {
+    requestAnimationFrame(drawVisualizer);
+    analyser.getFloatTimeDomainData(dataArray);
+    
+    canvasCtx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary-bg');
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    canvasCtx.lineWidth = 2;
+    canvasCtx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--accent-color');
+    canvasCtx.beginPath();
+    
+    const sliceWidth = canvas.width / bufferLength;
+    let x = 0;
+    
+    for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] * 100;
+        const y = (canvas.height / 2) + (v * canvas.height / 2);
+        
+        if (i === 0) {
+            canvasCtx.moveTo(x, y);
+        } else {
+            canvasCtx.lineTo(x, y);
+        }
+        x += sliceWidth;
+    }
+    
+    canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    canvasCtx.stroke();
 }
 
 function initializeEventListeners() {
@@ -150,8 +157,8 @@ function initializeEventListeners() {
         masterGainNode.gain.setValueAtTime(e.target.value / 100, audioContext.currentTime);
     });
 
-    themeSelect.addEventListener('change', (e) => {
-        document.body.className = `theme-${e.target.value}`;
+    reverbControl.addEventListener('input', (e) => {
+        reverbValue.textContent = `${e.target.value}%`;
     });
 
     recordToggle.addEventListener('click', () => {
@@ -181,6 +188,7 @@ function initializeEventListeners() {
             setTimeout(() => {
                 instrumentSelect.value = note.instrument;
                 volumeControl.value = note.volume;
+                reverbControl.value = note.reverb;
                 playNote(note.note);
             }, note.time);
         });
@@ -202,6 +210,23 @@ function initializeEventListeners() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     });
+
+    themeSelect.addEventListener('change', (e) => {
+        document.body.className = `theme-${e.target.value}`;
+    });
+
+    window.addEventListener('resize', () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    });
 }
 
-initializeEventListeners();
+function initializeApp() {
+    createReverbImpulse();
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    drawVisualizer();
+    initializeEventListeners();
+}
+
+initializeApp();

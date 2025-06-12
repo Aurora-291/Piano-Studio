@@ -57,55 +57,6 @@ body {
     letter-spacing: 0.05em;
 }
 
-.piano-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    margin: 3rem 0;
-    perspective: 1000px;
-}
-
-.piano-keyboard {
-    display: flex;
-    position: relative;
-    transform: rotateX(5deg);
-}
-
-.piano-key {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 1.5rem;
-    border-radius: 0 0 6px 6px;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    box-shadow: var(--shadow-soft);
-}
-
-.piano-key.white {
-    background: var(--key-white);
-    height: 300px;
-    width: 80px;
-    border: 1px solid #ddd;
-    color: #333;
-}
-
-.piano-key.black {
-    background: var(--key-black);
-    height: 180px;
-    width: 50px;
-    margin: 0 -25px;
-    z-index: 1;
-    color: #fff;
-}
-
-.piano-key.active {
-    transform: translateY(5px);
-    background: var(--key-active);
-}
-
 .elegant-select {
     padding: 0.8rem 1.5rem;
     border-radius: 2rem;
@@ -124,7 +75,7 @@ body {
 .studio-interface {
     display: grid;
     gap: 2rem;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto;
 }
 
 .control-section {
@@ -179,53 +130,11 @@ input[type="range"]::-webkit-slider-thumb {
     color: var(--text-secondary);
 }
 
-.theme-classic {
-    --primary-bg: #1a1a2e;
-    --secondary-bg: #16213e;
-    --accent-color: #4a90e2;
-}
-
-.theme-neon {
-    --primary-bg: #0a0a1f;
-    --secondary-bg: #1a1a3e;
-    --accent-color: #ff2e63;
-    --key-active: #00ff9f;
-}
-
-.theme-vintage {
-    --primary-bg: #2c1810;
-    --secondary-bg: #482c1d;
-    --accent-color: #c17817;
-    --key-active: #e6b17e;
-}
-
-.theme-midnight {
-    --primary-bg: #0a0a0a;
-    --secondary-bg: #1a1a1a;
-    --accent-color: #bb86fc;
-    --key-active: #03dac6;
-}
-
 .recording-panel {
     display: flex;
     gap: 1.5rem;
     align-items: center;
 }
-
-.tempo-panel {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2rem;
-}
-
-.tempo-slider {
-    width: 100%;
-}
-
-.studio-btn.metronome { background: #9b59b6; }
 
 .studio-btn {
     padding: 1rem 2rem;
@@ -256,3 +165,135 @@ input[type="range"]::-webkit-slider-thumb {
 .studio-btn.record { background: #e74c3c; }
 .studio-btn.play { background: #2ecc71; }
 .studio-btn.save { background: #f1c40f; }
+
+.piano-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 3rem 0;
+    perspective: 1000px;
+}
+
+.piano-keyboard {
+    display: flex;
+    position: relative;
+    transform: rotateX(5deg);
+}
+
+.piano-key {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 1.5rem;
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+}
+
+.piano-key.white {
+    background: var(--key-white);
+    height: 300px;
+    width: 80px;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.piano-key.black {
+    background: var(--key-black);
+    height: 180px;
+    width: 50px;
+    margin: 0 -25px;
+    z-index: 1;
+    color: #fff;
+}
+
+.piano-key.active {
+    transform: translateY(5px);
+    background: var(--key-active);
+}
+
+.visualizer-container {
+    width: 100%;
+    height: 120px;
+    background: var(--secondary-bg);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+#visualizer {
+    width: 100%;
+    height: 100%;
+}
+
+.theme-classic {
+    --primary-bg: #1a1a2e;
+    --secondary-bg: #16213e;
+    --accent-color: #4a90e2;
+}
+
+.theme-neon {
+    --primary-bg: #0a0a1f;
+    --secondary-bg: #1a1a3e;
+    --accent-color: #ff2e63;
+    --key-active: #00ff9f;
+}
+
+.theme-vintage {
+    --primary-bg: #2c1810;
+    --secondary-bg: #482c1d;
+    --accent-color: #c17817;
+    --key-active: #e6b17e;
+}
+
+.theme-midnight {
+    --primary-bg: #0a0a0a;
+    --secondary-bg: #1a1a1a;
+    --accent-color: #bb86fc;
+    --key-active: #03dac6;
+}
+
+@media (max-width: 1200px) {
+    .studio-container {
+        padding: 1rem;
+    }
+
+    .control-section {
+        grid-template-columns: 1fr;
+    }
+
+    .piano-key.white {
+        width: 60px;
+        height: 240px;
+    }
+
+    .piano-key.black {
+        width: 40px;
+        height: 150px;
+        margin: 0 -20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand h1 {
+        font-size: 1.5rem;
+    }
+
+    .piano-key.white {
+        width: 50px;
+        height: 200px;
+    }
+
+    .piano-key.black {
+        width: 30px;
+        height: 120px;
+        margin: 0 -15px;
+    }
+
+    .studio-btn {
+        padding: 0.8rem 1.5rem;
+    }
+}
